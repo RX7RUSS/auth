@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
-import { Header } from './components/common';
+import { Header, Button, Spinner, CardSection } from './components/common';
 import firebase from 'firebase';
 import LoginForm from './components/LoginForm';
 
 
 class App extends Component {
+  state = { loggedIn: null };
 
   componentWillMount() {
     firebase.initializeApp({
@@ -17,18 +18,33 @@ class App extends Component {
       messagingSenderId: '196273351508'
     });
 
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        this.setState({ loggedIn: true });
+      } else {
+        this.setState({ loggedIn: false });
+      }
+    });
   }
 
+renderContent() {
+  switch (this.state.loggedIn) {
+    case true:
+    return <CardSection>
+            <Button onPress={() => firebase.auth().signOut()}>Log Out</Button>
+          </CardSection>;
+    case false:
+      return <LoginForm />;
+    default:
+      return <Spinner size="large" />;
+  }
+}
 
   render() {
     return (
       <View style={{ marginTop: 25}}>
         <Header headerText='Authentication!' />
-        <LoginForm />
-        <Text style={{margin: 25, fontSize: 20, fontWeight: '600', fontFamily: 'Avenir', textAlign: 'center' }}>
-          Enter your email address and password to login.
-          If this is your first time logging in, a new account will be created for you.
-        </Text>
+        {this.renderContent()}
       </View>
     );
   }

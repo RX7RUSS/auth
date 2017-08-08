@@ -74,6 +74,7 @@ class LoginForm extends Component {
         <CardSection>
           {this.renderButton()}
         </CardSection>
+
       </Card>
     );
   }
@@ -81,9 +82,7 @@ class LoginForm extends Component {
 
 const styles = {
   errorTextStyle: {
-    fontSize: 20,
-    paddingTop: 15,
-    paddingBottom: 15,
+    fontSize: 16,
     alignSelf: 'center',
     color: 'red'
   }
